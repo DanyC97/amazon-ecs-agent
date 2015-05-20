@@ -37,10 +37,14 @@ func init() {
 	// the .json model or the generated struct names.
 	recognizedTypes := []interface{}{
 		ecstcs.StopTelemetrySessionMessage{},
-		ecstcs.AckRequest{},
+		ecstcs.AckPublishMetric{},
+		ecstcs.HeartbeatMessage{},
 		ecstcs.PublishMetricsRequest{},
 		ecstcs.StartTelemetrySessionRequest{},
 		ecstcs.ServerException{},
+		ecstcs.BadRequestException{},
+		ecstcs.ResourceValidationException{},
+		ecstcs.InvalidParameterException{},
 	}
 
 	tcsTypeMappings = make(map[string]reflect.Type)

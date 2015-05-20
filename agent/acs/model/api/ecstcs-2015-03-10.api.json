@@ -10,6 +10,14 @@
     "protocol":"json"
   },
   "operations":{
+    "Heartbeat":{
+      "name":"Heartbeat",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"HeartbeatMessage"}
+    },
     "PublishMetrics":{
       "name":"PublishMetrics",
       "http":{
@@ -17,10 +25,18 @@
         "requestUri":"/"
       },
       "input":{"shape":"PublishMetricsRequest"},
-      "output":{"shape":"AckRequest"},
+      "output":{"shape":"AckPublishMetric"},
       "errors":[
         {
-          "shape":"ClientException",
+          "shape":"BadRequestException",
+          "exception":true
+        },
+        {
+          "shape":"ResourceValidationException",
+          "exception":true
+        },
+        {
+          "shape":"InvalidParameterException",
           "exception":true
         },
         {
@@ -39,7 +55,11 @@
       "output":{"shape":"StopTelemetrySessionMessage"},
       "errors":[
         {
-          "shape":"ClientException",
+          "shape":"BadRequestException",
+          "exception":true
+        },
+        {
+          "shape":"ResourceValidationException",
           "exception":true
         },
         {
@@ -50,12 +70,20 @@
     }
   },
   "shapes":{
-    "AckRequest":{
+    "AckPublishMetric":{
       "type":"structure",
       "members":{
-        "messageId":{"shape":"String"}
+        "message":{"shape":"String"}
       }
     },
+    "BadRequestException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"String"}
+      },
+      "exception":true
+    },
+    "Boolean":{"type":"boolean"},
     "CWStatsSet":{
       "type":"structure",
       "members":{
@@ -65,13 +93,6 @@
         "sum":{"shape":"Double"},
         "unit":{"shape":"String"}
       }
-    },
-    "ClientException":{
-      "type":"structure",
-      "members":{
-        "message":{"shape":"String"}
-      },
-      "exception":true
     },
     "ContainerMetadata":{
       "type":"structure",
@@ -92,12 +113,26 @@
       "member":{"shape":"ContainerMetric"}
     },
     "Double":{"type":"double"},
+    "HeartbeatMessage":{
+      "type":"structure",
+      "members":{
+        "healthy":{"shape":"Boolean"}
+      }
+    },
     "Integer":{"type":"integer"},
+    "InvalidParameterException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"String"}
+      },
+      "exception":true
+    },
     "MetricsMetadata":{
       "type":"structure",
       "members":{
         "cluster":{"shape":"String"},
-        "containerInstance":{"shape":"String"}
+        "containerInstance":{"shape":"String"},
+        "idle":{"shape":"Boolean"}
       }
     },
     "PublishMetricsRequest":{
@@ -107,6 +142,13 @@
         "taskMetrics":{"shape":"TaskMetrics"},
         "timestamp":{"shape":"Timestamp"}
       }
+    },
+    "ResourceValidationException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"String"}
+      },
+      "exception":true
     },
     "ServerException":{
       "type":"structure",
@@ -134,6 +176,7 @@
       "members":{
         "taskArn":{"shape":"String"},
         "taskDefinitionFamily":{"shape":"String"},
+        "taskDefinitionVersion":{"shape":"String"},
         "containerMetrics":{"shape":"ContainerMetrics"}
       }
     },
